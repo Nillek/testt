@@ -1,7 +1,7 @@
 // Load the module dependencies
 const config = require('./config');
-const http = require('http');
 const path = require('path');
+const http = require('http');
 const socketio = require('socket.io');
 const express = require('express');
 const morgan = require('morgan');
@@ -15,15 +15,15 @@ const passport = require('passport');
 const configureSocket = require('./socketio');
 
 // Define the Express configuration method
-module.exports = function (db) {
+module.exports = function(db) {
 	// Create a new Express application instance
 	const app = express();
-
+	
 	// Create a new HTTP server
-	const server = http.createServer(app);
+    const server = http.createServer(app);
 
-	// Create a new Socket.io server
-	const io = socketio.listen(server);
+    // Create a new Socket.io server
+    const io = socketio.listen(server);
 
 	// Use the 'NDOE_ENV' variable to activate the 'morgan' logger or 'compress' middleware
 	if (process.env.NODE_ENV === 'development') {
@@ -38,7 +38,6 @@ module.exports = function (db) {
 	}));
 	app.use(bodyParser.json());
 	app.use(methodOverride());
-	
 
 	// Configure the MongoDB session storage
 	const mongoStore = new MongoStore({
@@ -67,14 +66,15 @@ module.exports = function (db) {
 	// Configure static file serving
 	app.use('/', express.static(path.resolve('./public')));
 	app.use('/lib', express.static(path.resolve('./node_modules')));
-
+	
 	// Load the routing files	
-	require('../app/routes/users.server.routes.js')(app);
+	require('../app/routes/users.server.routes.js')(app);	
 	require('../app/routes/articles.server.routes.js')(app);
 	require('../app/routes/index.server.routes.js')(app);
 
+	// Load the Socket.io configuration
 	configureSocket(server, io, mongoStore);
-
-	// Return the Express application instance
+	
+	// Return the Server instance
 	return server;
 };

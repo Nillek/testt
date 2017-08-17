@@ -25,7 +25,6 @@ const UserSchema = new Schema({
 		type: String,
 		required: 'Password is required',
 		// Validate the 'password' value length
-		default: 'test123',
 		validate: [
 			(password) => password && password.length > 6,
 			'Password should be longer'
